@@ -1,0 +1,74 @@
+//Part B
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+vector<double> probability(vector<double> &die){
+    vector<double> die_prob(13,0.0);
+    for(int i=0;i<die.size();i++){
+        for(int j=0;j<die.size();j++){
+        int total=die[i]+die[j];
+        die_prob[total]=die_prob[total]+1.0;
+    }
+    }
+    double totalcombinations=die.size()*die.size();
+    for(int i=2;i<=12;i++){
+        die_prob[i]/=totalcombinations;
+    }
+    
+    return die_prob;
+}
+pair<vector<int>,vector<int>> doomdie(vector<int> &diea,vector<int> &dieb){
+    vector<int> new_diea(6,0);
+     vector<int> new_dieb(6,0);
+     for(int i=0;i<6;i++){
+         for(int j=0;j<6;j++){
+             if(diea[i]+dieb[j]<=8){
+                 new_diea[i]+=1;
+             }
+         }
+     }
+     for(int i=0;i<6;i++){
+         for(int j=0;j<6;j++){
+             new_dieb[i]+=1;
+         }
+     }
+     //ensuring no face has more than 4 spots
+     for(int i=0;i<6;i++){
+         if(new_diea[i]>4){
+             int excess=new_diea[i]-4;
+             new_diea[i]-=excess;
+             for(int j=0;j<6;j++){
+                 if(i!=j&&new_diea[j]+excess<=4){
+                     new_diea[j]+=excess;
+                     break;
+                 }
+             }
+         }
+     }
+     return {new_diea,new_dieb};
+    
+}   
+int main()
+{
+    // Test with the provided input
+    vector<int> Die_A = {1, 2, 3, 4, 5, 6};
+    vector<int> Die_B = {1, 2, 3, 4, 5, 6};
+
+    // Call undoom_dice function
+    auto result = doomdie(Die_A, Die_B);
+
+    // Print the results
+    cout << "New Die A: ";
+    for (int i : result.first) {
+        cout << i << " ";
+    }
+
+    cout << "\nNew Die B: ";
+    for (int i : result.second) {
+        cout << i << " ";
+    }
+
+    return 0;
+}
